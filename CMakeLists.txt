@@ -15,35 +15,9 @@ include(CMakeDependentOption)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 ##---------------------------------------------------------------------------##
-# Download and unpack googletest
-##---------------------------------------------------------------------------##
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        release-1.10.0
-)
-FetchContent_GetProperties(googletest)
-if(NOT googletest_POPULATED)
-  FetchContent_Populate(googletest)
-  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
-endif()
-
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-##---------------------------------------------------------------------------##
 # Set up main options (inherit from Kokkos and Cabana CMake)
 ##---------------------------------------------------------------------------##
 find_package(Cabana REQUIRED)
-
-if( NOT Cabana_ENABLE_MPI )
-  message( FATAL_ERROR "Cabana must be compiled with MPI" )
-endif()
-if( NOT Cabana_ENABLE_CAJITA )
-  message( FATAL_ERROR "Cabana must be compiled with Cajita" )
-endif()
 
 cmake_dependent_option(CabanaMD_ENABLE_LB "Utilize Cabana load balancer" ON Cabana_ENABLE_ALL OFF)
 
@@ -81,6 +55,16 @@ add_subdirectory(bin)
 ##---------------------------------------------------------------------------##
 option(CabanaMD_ENABLE_TESTING "Build tests" OFF)
 if(CabanaMD_ENABLE_TESTING)
+  find_package(GTest 1.10 REQUIRED)
+  # Workaround for FindGTest module in CMake older than 3.20
+  if(TARGET GTest::gtest)
+    set(gtest_target GTest::gtest)
+  elseif(TARGET GTest::GTest)
+    set(gtest_target GTest::GTest)
+  else()
+    message(FATAL_ERROR "bug in GTest find module workaround")
+  endif()
+
   enable_testing()
   add_subdirectory(unit_test)
 endif()
