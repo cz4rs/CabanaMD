@@ -85,7 +85,7 @@ void CbnMD<t_System, t_Neighbor>::init( InputCL commandline )
 
     using exe_space = typename t_System::execution_space;
     if ( print_rank() )
-        exe_space::print_configuration( out );
+        exe_space().print_configuration( out );
 
 #ifndef CabanaMD_ENABLE_NNP
     // Check that the requested pair_style was compiled
@@ -229,7 +229,7 @@ void CbnMD<t_System, t_Neighbor>::init( InputCL commandline )
     }
 
 #ifdef CabanaMD_ENABLE_LB
-    lb = new Cajita::Experimental::LoadBalancer<Cajita::UniformMesh<double>>(
+    lb = new Cabana::Grid::Experimental::LoadBalancer<Cabana::Grid::UniformMesh<double>>(
         MPI_COMM_WORLD, system->global_grid );
 #endif
 
