@@ -63,6 +63,7 @@ class InputCL
     int layout_type;
     int nnp_layout_type;
     int device_type;
+    bool unbalanced = false;
 
     int dumpbinary_rate, correctness_rate;
     bool dumpbinaryflag, correctnessflag;
