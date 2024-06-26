@@ -42,7 +42,7 @@ void writeDomainParallelFile( MPI_Comm comm, int time_step,
     fprintf( file, "\t</PPoints>\n" );
     for ( int i = 0; i < size; ++i )
         fprintf( file, "\t<Piece Source=\"%s_%d_%d.vtu\"/>\n", basename.c_str(),
-                 time_step, i );
+                 i, time_step );
     fprintf( file, "</PUnstructuredGrid>\n" );
     fprintf( file, "</VTKFile>\n" );
     fclose( file );
@@ -61,7 +61,7 @@ void writeDomain( MPI_Comm comm, int time_step,
         writeDomainParallelFile( comm, time_step, basename );
     std::stringstream filename;
     // todo(sschulz): properly format, according to max rank
-    filename << basename << "_" << time_step << "_" << rank << ".vtu";
+    filename << basename << "_" << rank << "_" << time_step << ".vtu";
     FILE *file = fopen( filename.str().c_str(), "w" );
     fprintf( file, "<?xml version=\"1.0\"?>\n" );
     fprintf( file, "<VTKFile type=\"UnstructuredGrid\" version=\"0.1\" "
