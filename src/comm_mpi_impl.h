@@ -48,7 +48,10 @@
 
 #include <mpi.h>
 
+#include <output.h>
+
 #include <algorithm>
+#include <iostream>
 
 template <class t_System>
 Comm<t_System>::Comm( t_System *s, T_X_FLOAT comm_depth_ )
@@ -267,6 +270,11 @@ void Comm<t_System>::exchange()
     }
 
     N_local = N_local + N_total_recv - N_total_send;
+
+    std::cout << '[' << proc_rank << "] "
+              << "N_local: " << N_local << "\tN_total_recv: " << N_total_recv
+              << "\tN_total_send: " << N_total_send << std::endl
+              << std::flush;
 
     system->N_local = N_local;
     system->N_ghost = 0;
