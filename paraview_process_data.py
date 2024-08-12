@@ -11,16 +11,16 @@ paraview.simple._DisableFirstRenderCameraReset()
 # create a new 'XML Partitioned Unstructured Grid Reader'
 dump_10pvtu = XMLPartitionedUnstructuredGridReader(
         registrationName='dump_10.pvtu*', FileName=[
-    '/home/cz4rs/code/cabana/CabanaMD/dump_10.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_20.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_30.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_40.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_50.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_60.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_70.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_80.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_90.pvtu',
-    '/home/cz4rs/code/cabana/CabanaMD/dump_100.pvtu'
+            '/home/cz4rs/code/cabana/CabanaMD/dump_010.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_020.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_030.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_040.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_050.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_060.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_070.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_080.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_090.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/dump_100.pvtu'
 ])
 
 # Properties modified on dump_10pvtu
@@ -99,7 +99,19 @@ velocityLUT.RescaleTransferFunction(-1.42767, 1.41958)
 velocityPWF.RescaleTransferFunction(-1.42767, 1.41958)
 
 # create a new 'XML Partitioned Unstructured Grid Reader'
-domain_act_10pvtu = XMLPartitionedUnstructuredGridReader(registrationName='domain_act_10.pvtu*', FileName=['/home/cz4rs/code/cabana/CabanaMD/domain_act_10.pvtu', '/home/cz4rs/code/cabana/CabanaMD/domain_act_20.pvtu'])
+domain_act_10pvtu = XMLPartitionedUnstructuredGridReader(
+        registrationName='domain_act_10.pvtu*', FileName=[
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_010.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_020.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_030.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_040.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_050.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_060.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_070.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_080.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_090.pvtu',
+            '/home/cz4rs/code/cabana/CabanaMD/domain_act_100.pvtu'
+            ])
 
 # Properties modified on domain_act_10pvtu
 domain_act_10pvtu.TimeArray = 'None'
