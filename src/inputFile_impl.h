@@ -809,13 +809,17 @@ void InputFile<t_System>::create_lattice( Comm<t_System> *comm )
     Temperature<t_System> temp( comm );
     T_V_FLOAT T = temp.compute( system );
 
-    T_V_FLOAT T_init_scale = sqrt( temperature_target / T );
-
+    auto T_init_scale = [=]( int i )
+    {
+        // FIXME: velocity: accept multiple temperature targets
+        auto target = h_type( i ) == 1 ? 100.4 : temperature_target;
+        return sqrt( target / T );
+    };
     for ( T_INT i = 0; i < system->N_local; i++ )
     {
-        h_v( i, 0 ) *= T_init_scale;
-        h_v( i, 1 ) *= T_init_scale;
-        h_v( i, 2 ) *= T_init_scale;
+        h_v( i, 0 ) *= T_init_scale( i );
+        h_v( i, 1 ) *= T_init_scale( i );
+        h_v( i, 2 ) *= T_init_scale( i );
     }
     system->deep_copy( host_system );
 
