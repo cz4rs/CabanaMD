@@ -1,3 +1,20 @@
+import os
+
+# get all the .pvtu files in current directory
+# not very pythonic, but it gets the job done
+dumps = []
+domain_act = []
+domain_lb = []
+dirname = os.getcwd()
+for f in os.listdir(dirname):
+    if f.endswith(".pvtu"):
+        if f.startswith("dump"):
+            dumps.append(os.path.join(dirname, f))
+        elif f.startswith("domain_act"):
+            domain_act.append(os.path.join(dirname, f))
+        elif f.startswith("domain_lb"):
+            domain_lb.append(os.path.join(dirname, f))
+
 # trace generated using paraview version 5.12.0
 #import paraview
 #paraview.compatibility.major = 5
@@ -9,22 +26,11 @@ from paraview.simple import *
 paraview.simple._DisableFirstRenderCameraReset()
 
 # create a new 'XML Partitioned Unstructured Grid Reader'
-dump_10pvtu = XMLPartitionedUnstructuredGridReader(
-        registrationName='dump_10.pvtu*', FileName=[
-            '/home/cz4rs/code/cabana/CabanaMD/dump_010.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_020.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_030.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_040.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_050.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_060.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_070.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_080.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_090.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/dump_100.pvtu'
-])
+particles = XMLPartitionedUnstructuredGridReader(
+        registrationName='particles', FileName=dumps)
 
 # Properties modified on dump_10pvtu
-dump_10pvtu.TimeArray = 'None'
+particles.TimeArray = 'None'
 
 # get active view
 renderView1 = GetActiveViewOrCreate('RenderView')
@@ -32,9 +38,8 @@ renderView1 = GetActiveViewOrCreate('RenderView')
 renderView1.ApplyIsometricView()
 renderView1.AxesGrid.Visibility = 1
 
-
 # get display properties
-dump_10pvtuDisplay = GetDisplayProperties(dump_10pvtu, view=renderView1)
+particlesDisplay = GetDisplayProperties(particles, view=renderView1)
 
 # get animation scene
 animationScene1 = GetAnimationScene()
@@ -43,7 +48,7 @@ animationScene1 = GetAnimationScene()
 animationScene1.UpdateAnimationUsingDataTimeSteps()
 
 # create a new 'Glyph'
-glyph1 = Glyph(registrationName='Glyph1', Input=dump_10pvtu,
+glyph1 = Glyph(registrationName='Glyph', Input=particles,
     GlyphType='Arrow')
 
 # show data in view
@@ -84,28 +89,17 @@ velocityLUT.RescaleTransferFunction(-1.42767, 1.41958)
 velocityPWF.RescaleTransferFunction(-1.42767, 1.41958)
 
 # create a new 'XML Partitioned Unstructured Grid Reader'
-domain_act_10pvtu = XMLPartitionedUnstructuredGridReader(
-        registrationName='domain_act_10.pvtu*', FileName=[
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_010.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_020.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_030.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_040.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_050.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_060.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_070.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_080.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_090.pvtu',
-            '/home/cz4rs/code/cabana/CabanaMD/domain_act_100.pvtu'
-            ])
+domain_actual = XMLPartitionedUnstructuredGridReader(
+        registrationName='domain_actual', FileName=domain_act)
 
 # Properties modified on domain_act_10pvtu
-domain_act_10pvtu.TimeArray = 'None'
+domain_actual.TimeArray = 'None'
 
 # show data in view
-domain_act_10pvtuDisplay = Show(domain_act_10pvtu, renderView1, 'UnstructuredGridRepresentation')
+domain_actualDisplay = Show(domain_actual, renderView1, 'UnstructuredGridRepresentation')
 
 # trace defaults for the display properties.
-domain_act_10pvtuDisplay.Representation = 'Surface'
+domain_actualDisplay.Representation = 'Surface'
 
 # Rescale transfer function
 velocityLUT.RescaleTransferFunction(-1.42767, 1.41958)
@@ -114,16 +108,16 @@ velocityLUT.RescaleTransferFunction(-1.42767, 1.41958)
 velocityPWF.RescaleTransferFunction(-1.42767, 1.41958)
 
 # change representation type
-domain_act_10pvtuDisplay.SetRepresentationType('Wireframe')
+domain_actualDisplay.SetRepresentationType('Wireframe')
 
 # set scalar coloring
-ColorBy(domain_act_10pvtuDisplay, ('CELLS', 'rank'))
+ColorBy(domain_actualDisplay, ('CELLS', 'rank'))
 
 # rescale color and/or opacity maps used to include current data range
-domain_act_10pvtuDisplay.RescaleTransferFunctionToDataRange(True, False)
+domain_actualDisplay.RescaleTransferFunctionToDataRange(True, False)
 
 # show color bar/color legend
-domain_act_10pvtuDisplay.SetScalarBarVisibility(renderView1, True)
+domain_actualDisplay.SetScalarBarVisibility(renderView1, True)
 
 # get color transfer function/color map for 'rank'
 rankLUT = GetColorTransferFunction('rank')
@@ -135,11 +129,10 @@ rankPWF = GetOpacityTransferFunction('rank')
 rankTF2D = GetTransferFunction2D('rank')
 
 # Properties modified on domain_act_10pvtuDisplay
-domain_act_10pvtuDisplay.LineWidth = 2.0
+domain_actualDisplay.LineWidth = 2.0
 
 # reset view to fit data bounds
 renderView1.ResetCamera(False, 0.9)
 
 # update the view to ensure updated data information
 renderView1.Update()
-
